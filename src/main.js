@@ -38,6 +38,7 @@ refs.formEl.addEventListener('submit', e => {
         }
       })
       .catch(error => {
+        console.log(error);
         iziToast.error({
           title: 'Error',
           message:
