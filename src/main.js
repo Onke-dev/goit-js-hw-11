@@ -13,6 +13,7 @@ const refs = {
 
 refs.formEl.addEventListener('submit', e => {
   e.preventDefault();
+  refs.galleryList.innerHTML = '';
   const formData = new FormData(e.target);
   const searchText = formData.get('search-text');
   if (searchText.trim() === '') {
@@ -22,17 +23,24 @@ refs.formEl.addEventListener('submit', e => {
         'Sorry, there are no images matching your search query. Please try again!',
     });
   } else {
-    pixibay.getImagesByQuery(searchText).then(res => {
-      if (res.hits.length === 0) {
-        iziToast.error({
-          title: 'Error',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-      } else {
-        console.log(res);
-      }
-    });
+    render.showLoader();
+    pixibay
+      .getImagesByQuery(searchText)
+      .then(res => {
+        if (res.hits.length === 0) {
+          iziToast.error({
+            title: 'Error',
+            message:
+              'Sorry, there are no images matching your search query. Please try again!',
+          });
+        } else {
+          render.createGallery(res.hits);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => render.hideLoader());
   }
   refs.formEl.reset();
 });
