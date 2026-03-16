@@ -3,8 +3,8 @@ import iziToast from 'izitoast';
 // Додатковий імпорт стилів
 import 'izitoast/dist/css/iziToast.min.css';
 
-import * as pixibay from './js/pixabay-api';
-import * as render from './js/render-functions';
+import * as pixabay from './js/pixabay-api.js';
+import * as render from './js/render-functions.js';
 
 const refs = {
   formEl: document.querySelector('.form'),
@@ -13,7 +13,6 @@ const refs = {
 
 refs.formEl.addEventListener('submit', e => {
   e.preventDefault();
-  refs.galleryList.innerHTML = '';
   const formData = new FormData(e.target);
   const searchText = formData.get('search-text');
   if (searchText.trim() === '') {
@@ -23,8 +22,9 @@ refs.formEl.addEventListener('submit', e => {
         'Sorry, there are no images matching your search query. Please try again!',
     });
   } else {
+    render.clearGallery();
     render.showLoader();
-    pixibay
+    pixabay
       .getImagesByQuery(searchText)
       .then(res => {
         if (res.hits.length === 0) {
@@ -38,7 +38,11 @@ refs.formEl.addEventListener('submit', e => {
         }
       })
       .catch(error => {
-        console.log(error);
+        iziToast.error({
+          title: 'Error',
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+        });
       })
       .finally(() => render.hideLoader());
   }

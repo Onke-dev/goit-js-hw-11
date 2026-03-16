@@ -41,10 +41,9 @@ export function clearGallery() {
 }
 
 export function showLoader() {
-    loader.classList.add('loader');
-    loader.style.display = "flex";
+  loader.classList.remove('is-hidden');
 }
 
 export function hideLoader() {
-    loader.classList.add('is-hidden');
+  loader.classList.add('is-hidden');
 }
